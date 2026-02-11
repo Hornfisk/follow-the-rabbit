@@ -12,7 +12,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # --- NEW STEP: Create a clean folder with only your website files ---
       - name: Prepare deployment files
         run: mkdir -p dist && cp -r index.html css js images dist/
 
@@ -23,10 +22,19 @@ jobs:
           username: ${{ secrets.HOSTINGER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 65002
-          source: "dist"             # We only upload the clean 'dist' folder
+          source: "dist"
           target: "/home/u358740591/public_html"
-          
-          # ADD THIS: Removes the 'dist' folder name so files land directly in public_html
-          strip_components: 1        
-          
-          overwrite: true           # Force overwrite old files
+          strip_components: 1
+          overwrite: true
+
+      # --- ADD THIS STEP ---
+      - name: Fix Permissions on Hostinger
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOSTINGER_IP }}
+          username: ${{ secrets.HOSTINGER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 65002
+          script: |
+            chmod -R 755 /home/u358740591/public_html
+            find /home/u358740591/public_html -type f -exec chmod 644 {} \;
