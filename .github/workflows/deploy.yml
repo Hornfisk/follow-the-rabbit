@@ -12,12 +12,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 1. Create a clean 'dist' folder with only the website files
-      - name: Prepare deployment files
-        run: mkdir -p dist && cp -r index.html css js images dist/
-
-      # 2. Delete old files from the server (The "Clean Slate" step)
-      # This prevents "old files not updating" issues
+      # 1. Clean up old files AND the blocking default.php in the ROOT folder
       - name: Clean up old files
         uses: appleboy/ssh-action@master
         with:
@@ -26,12 +21,17 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 65002
           script: |
+            # This deletes the file blocking your site in the root directory
+            rm -f /home/u358740591/public_html/default.php
+            rm -f /home/u358740591/public_html/default.php.old.php
+            
+            # Now delete your project files
             rm -rf /home/u358740591/public_html/index.html
             rm -rf /home/u358740591/public_html/css
             rm -rf /home/u358740591/public_html/js
             rm -rf /home/u358740591/public_html/images
 
-      # 3. Upload the new clean files
+      # 2. Upload the specific files we need directly to the ROOT
       - name: Upload files via SCP
         uses: appleboy/scp-action@master
         with:
@@ -39,6 +39,10 @@ jobs:
           username: ${{ secrets.HOSTINGER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 65002
-          source: "dist"
+          source: |
+            index.html
+            css
+            js
+            images
           target: "/home/u358740591/public_html"
-          strip_components: 1
+          overwrite: true
