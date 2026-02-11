@@ -20,6 +20,6 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            cd /home/your_user/public_html
+            cd /home/u123456/domains/rabbit.sonidosessions.es/public_html 
             git pull origin main
             # Add any build commands here (e.g., npm install, composer install)
