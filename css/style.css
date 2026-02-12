@@ -1,9 +1,9 @@
 /* --- CSS VARIABLES & RESET --- */
 :root {
     --color-magenta: #D900FF;
-    --color-white: #FFFFFF;
-    --color-black: #000000;
-    --color-dark-gray: #111111;
+    --color-white: #FFFF;
+    --color-black: #0000;
+    --color-dark-gray: #1111;
     --color-surface: #1a1a1a;
     
     --font-head: 'Space Grotesk', sans-serif;
@@ -117,7 +117,7 @@ img {
 
 /* --- BACKGROUND FX --- */
 .bg-gradient {
-    background: radial-gradient(circle at center, #2a002e 0%, #000000 70%);
+    background: radial-gradient(circle at center, #2a002e 0%, #0000 70%);
     position: fixed;
     top: 0;
     left: 0;
@@ -233,17 +233,8 @@ nav {
 .rabbit-icon {
     width: 180px; 
     height: auto !important;
-    
-    /* --- CENTERING MAGIC --- */
     display: block; 
-    margin-left: auto;
-    margin-right: auto;
-    /* ----------------------- */
-
-    margin-bottom: 20px;
-    
-    /* We removed the 'transform: translateX' line because you fixed the image */
-    
+    margin: 0 auto 20px auto;
     filter: drop-shadow(0 0 15px var(--color-magenta));
     animation: float 4s ease-in-out infinite;
 }
