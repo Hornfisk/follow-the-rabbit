@@ -12,12 +12,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Rsync to Hostinger
-        uses: burnett01/rsync-deployments@5.4.0
+      - name: Deploy to Hostinger via SSH
+        uses: easingthemes/ssh-deploy@v4.1.8
         with:
-          switches: -avzr --delete --exclude='.git' --exclude='.github' --exclude='node_modules'
-          path: ./
-          remote_path: /home/u358740591/public_html
-          remote_host: ${{ secrets.HOSTINGER_IP }}
-          remote_user: ${{ secrets.HOSTINGER_USER }}
-          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.HOSTINGER_IP }}
+          REMOTE_USER: ${{ secrets.HOSTINGER_USER }}
+          TARGET: /home/u358740591/public_html/
+          SOURCE: ./
+          EXCLUDE: "/node_modules /.git /.github"
+          ARGS: "-avzr --delete"
