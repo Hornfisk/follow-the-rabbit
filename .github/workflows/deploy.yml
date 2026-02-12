@@ -12,37 +12,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 1. Clean up old files AND the blocking default.php in the ROOT folder
-      - name: Clean up old files
-        uses: appleboy/ssh-action@master
+      - name: Rsync to Hostinger
+        uses: burnett01/rsync-deployments@5.4.0
         with:
-          host: ${{ secrets.HOSTINGER_IP }}
-          username: ${{ secrets.HOSTINGER_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 65002
-          script: |
-            # This deletes the file blocking your site in the root directory
-            rm -f /home/u358740591/public_html/default.php
-            rm -f /home/u358740591/public_html/default.php.old.php
-            
-            # Now delete your project files
-            rm -rf /home/u358740591/public_html/index.html
-            rm -rf /home/u358740591/public_html/css
-            rm -rf /home/u358740591/public_html/js
-            rm -rf /home/u358740591/public_html/images
-
-      # 2. Upload the specific files we need directly to the ROOT
-      - name: Upload files via SCP
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.HOSTINGER_IP }}
-          username: ${{ secrets.HOSTINGER_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 65002
-          source: |
-            index.html
-            css
-            js
-            images
-          target: "/home/u358740591/public_html"
-          overwrite: true
+          switches: -avzr --delete --exclude='.git' --exclude='.github' --exclude='node_modules'
+          path: ./
+          remote_path: /home/u358740591/public_html
+          remote_host: ${{ secrets.HOSTINGER_IP }}
+          remote_user: ${{ secrets.HOSTINGER_USER }}
+          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
