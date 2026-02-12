@@ -1,21 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Follow the Rabbit | Electronic Music Event</title>
-    <meta name="description" content="Follow the Rabbit into the Rave. An curated experience presented by Sonido Sessions & Project Insana.">
-    
+    <meta name="description" content="Follow the Rabbit into the Rave. An curated experience presented by Sonido Sessions & Project Insana." />
+
     <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Space+Grotesk:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Space+Grotesk:wght@400;700;900&display=swap" rel="stylesheet" />
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-
     <!-- Background Elements -->
     <div class="bg-gradient"></div>
     <div class="grid-overlay"></div>
@@ -39,9 +38,9 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="container hero-content">
-            <!-- Simple SVG Rabbit Icon -->
-                       <img src="images/follow-the-rabbit-logo-magenta.png" alt="Follow the Rabbit Logo" class="rabbit-icon"> 
-	    <h1>Into The <span class="text-magenta">Rave</span></h1>
+            <!-- Updated to .webp logo -->
+            <img src="images/follow-the-rabbit.webp" alt="Follow the Rabbit Logo" class="rabbit-icon" />
+            <h1>Into The <span class="text-magenta">Rave</span></h1>
             <p>FOLLOW THE RABBIT // HOUSE • TECHNO • TRANCE</p>
             <a href="#tickets" class="btn btn-primary">Enter the Void</a>
         </div>
@@ -64,23 +63,23 @@
                 <h2 class="section-title">The <span class="text-magenta">Hive</span> Mind</h2>
                 <p style="margin-bottom: 40px; color: #ccc;">Selected Sonic Agents</p>
             </div>
-            
+
             <div class="lineup-grid">
                 <!-- Artist 1 -->
                 <div class="artist-card">
-                    <img src="https://picsum.photos/seed/dj1/400/400" alt="DJ Avatar" class="artist-img">
+                    <img src="https://picsum.photos/seed/dj1/400/400" alt="DJ Avatar" class="artist-img" />
                     <div class="artist-name">TBA</div>
                     <div class="artist-genre">TBA</div>
                 </div>
                 <!-- Artist 2 -->
                 <div class="artist-card">
-                    <img src="https://picsum.photos/seed/dj2/400/400" alt="DJ Avatar" class="artist-img">
+                    <img src="https://picsum.photos/seed/dj2/400/400" alt="DJ Avatar" class="artist-img" />
                     <div class="artist-name">TBA</div>
                     <div class="artist-genre">TBA</div>
                 </div>
                 <!-- Artist 3 -->
                 <div class="artist-card">
-                    <img src="https://picsum.photos/seed/dj3/400/400" alt="DJ Avatar" class="artist-img">
+                    <img src="https://picsum.photos/seed/dj3/400/400" alt="DJ Avatar" class="artist-img" />
                     <div class="artist-name">TBA</div>
                     <div class="artist-genre">TBA</div>
                 </div>
@@ -95,7 +94,7 @@
                 <!-- Details -->
                 <div class="info-box">
                     <h2 style="font-family: var(--font-head); margin-bottom: 30px; text-transform: uppercase;">Mission <span class="text-magenta">Briefing</span></h2>
-                    
+
                     <div class="info-item">
                         <span class="info-label">Date</span>
                         <span class="info-value">April 10, 2026</span>
@@ -106,7 +105,7 @@
                     </div>
                     <div class="info-item">
                         <span class="info-label">Location</span>
-                        <span class="info-value">TBA - Stay Tuned!<br>Benalmadena</span>
+                        <span class="info-value">TBA - Stay Tuned!<br />Benalmadena</span>
                     </div>
                     <div class="info-item">
                         <span class="info-label">Age Restriction</span>
@@ -117,7 +116,7 @@
                 <!-- Tickets -->
                 <div id="tickets" class="info-box" style="border-left: none; border-right: 4px solid var(--color-magenta);">
                     <h2 style="font-family: var(--font-head); margin-bottom: 30px; text-transform: uppercase;">Access <span class="text-magenta">Passes</span></h2>
-                    
+
                     <div class="ticket-tier">
                         <div>
                             <div style="font-weight: 700;">Early Rabbit</div>
@@ -150,13 +149,8 @@
     <section id="gallery" class="section-padding">
         <div class="container">
             <h2 class="section-title text-center">Visual <span class="text-magenta">Echoes</span></h2>
-            <div class="gallery-grid">
-                <div class="gallery-item"><img src="https://picsum.photos/seed/rave1/600/600" alt="Event crowd"></div>
-                <div class="gallery-item"><img src="https://picsum.photos/seed/rave2/600/400" alt="Lasers"></div>
-                <div class="gallery-item"><img src="https://picsum.photos/seed/rave3/400/400" alt="DJ setup"></div>
-                <div class="gallery-item"><img src="https://picsum.photos/seed/rave4/400/400" alt="Crowd hands"></div>
-                <div class="gallery-item"><img src="https://picsum.photos/seed/rave5/400/400" alt="Neon lights"></div>
-                <div class="gallery-item"><img src="https://picsum.photos/seed/rave6/400/400" alt="Festival view"></div>
+            <div class="gallery-grid" id="galleryGrid">
+                <!-- Images will be dynamically inserted here -->
             </div>
         </div>
     </section>
@@ -165,7 +159,7 @@
     <footer>
         <div class="container footer-content">
             <div class="logo">Follow <span>The Rabbit</span></div>
-            
+
             <div class="presenters">
                 <span>Presented By</span>
                 <div class="divider"></div>
@@ -180,9 +174,7 @@
                 <a href="#" class="social-link" aria-label="SoundCloud">SC</a>
             </div>
 
-            <div class="copyright">
-                &copy; 2026 Follow the Rabbit Event. All rights reserved.
-            </div>
+            <div class="copyright">&copy; 2026 Follow the Rabbit Event. All rights reserved.</div>
         </div>
     </footer>
 
