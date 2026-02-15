@@ -199,13 +199,13 @@ nav {
 
 /* --- HERO SECTION --- */
 .hero {
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
     position: relative;
-    padding-top: 80px;
+    padding: 120px 0 80px; /* Increased padding for better spacing */
 }
 
 .hero-content {
@@ -255,6 +255,8 @@ nav {
     padding: 10px 0;
     transform: rotate(-2deg) scale(1.05);
     border: 2px solid var(--color-white);
+    margin-top: 40px; /* Add space above marquee */
+    margin-bottom: 40px; /* Add space below marquee */
 }
 
 .marquee-content {

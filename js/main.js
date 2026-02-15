@@ -99,3 +99,11 @@ selectedImages.forEach((filename) => {
     div.appendChild(img);
     galleryGrid.appendChild(div);
 });
+function openModal() {
+    modal.classList.add('active');
+    // Reset button text immediately on tap
+    const buyButton = document.querySelector('#tickets button.btn-primary');
+    if (buyButton) {
+        buyButton.textContent = 'Buy Tickets';
+    }
+}
