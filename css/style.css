@@ -115,6 +115,12 @@ img {
     color: var(--color-magenta);
 }
 
+/* FIX: Override background color for Primary Button animation */
+/* This prevents the text from disappearing on mobile tap/hover */
+.btn-primary::before {
+    background: var(--color-white);
+}
+
 /* --- BACKGROUND FX --- */
 .bg-gradient {
     background: radial-gradient(circle at center, #2a002e 0%, #0000 70%);
@@ -199,13 +205,15 @@ nav {
 
 /* --- HERO SECTION --- */
 .hero {
-    min-height: 100vh;
+    height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
     position: relative;
-    padding: 120px 0 80px; /* Increased padding for better spacing */
+    padding-top: 80px;
+    /* FIX: Add bottom padding to ensure button clears the rotated marquee on all screen sizes */
+    padding-bottom: 80px;
 }
 
 .hero-content {
@@ -241,8 +249,6 @@ nav {
 
     margin-bottom: 20px;
 
-    /* We removed the 'transform: translateX' line because you fixed the image */
-
     filter: drop-shadow(0 0 15px var(--color-magenta));
     animation: float 4s ease-in-out infinite;
 }
@@ -255,8 +261,6 @@ nav {
     padding: 10px 0;
     transform: rotate(-2deg) scale(1.05);
     border: 2px solid var(--color-white);
-    margin-top: 40px; /* Add space above marquee */
-    margin-bottom: 40px; /* Add space below marquee */
 }
 
 .marquee-content {

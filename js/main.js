@@ -20,11 +20,6 @@ const modal = document.getElementById('ticketModal');
 
 function openModal() {
     modal.classList.add('active');
-    // Reset button text immediately on tap for mobile
-    const buyButton = document.querySelector('#tickets button.btn-primary');
-    if (buyButton) {
-        buyButton.textContent = 'Buy Tickets';
-    }
 }
 
 function closeModal() {
@@ -35,11 +30,6 @@ function closeModal() {
 modal.addEventListener('click', (e) => {
     if (e.target === modal) {
         closeModal();
-        // Ensure button text is restored when closing modal
-        const buyButton = document.querySelector('#tickets button.btn-primary');
-        if (buyButton) {
-            buyButton.textContent = 'Buy Tickets';
-        }
     }
 });
 
