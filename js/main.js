@@ -46,7 +46,7 @@ document.querySelectorAll('section').forEach((section) => {
     observer.observe(section);
 });
 
-// Gallery generation
+// Gallery generation (unchanged)
 const galleryGrid = document.getElementById('galleryGrid');
 const imageFiles = [
     'IMG_6073.webp','IMG_6074.webp','IMG_6082.webp','IMG_6086.webp','IMG_6089.webp',
@@ -76,47 +76,72 @@ if (galleryGrid) {
 }
 
 /* -------------------------
-   Marquee: dynamic speed fix
+   Marquee: fixed-target-duration approach
    ------------------------- */
 (function() {
     const marqueeContent = document.querySelector('.marquee-content');
     if (!marqueeContent) return;
 
-    function debounce(fn, wait=120) {
-        let t;
-        return function(...args) {
-            clearTimeout(t);
-            t = setTimeout(() => fn.apply(this, args), wait);
-        };
+    function restartAnimation() {
+        // Force restart to pick up new duration
+        marqueeContent.style.animation = 'none';
+        // trigger reflow
+        // eslint-disable-next-line no-unused-expressions
+        marqueeContent.offsetHeight;
+        marqueeContent.style.animation = '';
     }
 
-    function updateMarquee() {
-        // marqueeContent contains two identical blocks; compute total width
-        const totalWidth = marqueeContent.scrollWidth;
-        if (!totalWidth) return;
-
-        const blockWidth = totalWidth / 2;
-
-        const style = getComputedStyle(document.documentElement);
-        const pxPerSecRaw = style.getPropertyValue('--marquee-px-per-sec') || '900';
-        const pxPerSec = parseFloat(pxPerSecRaw) || 900;
-
-        // duration in seconds (min 0.5s to avoid too-fast edge)
-        const durationSec = Math.max(0.5, blockWidth / pxPerSec);
-
-        document.documentElement.style.setProperty('--marquee-distance', `${blockWidth}px`);
-        document.documentElement.style.setProperty('--marquee-duration', `${durationSec}s`);
+    function ensureTwoBlocks() {
+        // If only one block present (or odd structure), duplicate the first block to create seamless pair
+        const blocks = marqueeContent.querySelectorAll('.marquee-block');
+        if (blocks.length < 2) {
+            const first = blocks[0];
+            if (!first) return;
+            const clone = first.cloneNode(true);
+            marqueeContent.appendChild(clone);
+        } else if (blocks.length > 2) {
+            // If there are more than 2, keep the first two (ensures -50% translation works predictably)
+            // But only do this if content was not intentionally multiplied
+            // (We trim only if there are exact duplicates and we're likely in dev mode)
+            // skip trimming to avoid removing intentional repeats; keep as-is
+        }
     }
 
-    const debouncedUpdate = debounce(updateMarquee, 120);
+    function applyTargetDuration() {
+        const rootStyle = getComputedStyle(document.documentElement);
+        const targetRaw = rootStyle.getPropertyValue('--marquee-target-duration').trim() || '2s';
+        // validate format like "2s" or "1500ms"
+        const ok = /^(\d+(\.\d+)?)(ms|s)$/.test(targetRaw);
+        const target = ok ? targetRaw : '2s';
+        // set runtime var used by animation
+        document.documentElement.style.setProperty('--marquee-duration', target);
+        // restart animation so change takes effect immediately
+        restartAnimation();
+    }
 
+    function onReady() {
+        ensureTwoBlocks();
+        applyTargetDuration();
+    }
+
+    // Wait for fonts and layout to settle
     if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(() => { setTimeout(updateMarquee, 30); }).catch(() => setTimeout(updateMarquee, 30));
+        document.fonts.ready.then(() => setTimeout(onReady, 30)).catch(() => setTimeout(onReady, 30));
     } else {
-        window.addEventListener('load', () => setTimeout(updateMarquee, 30));
+        window.addEventListener('load', () => setTimeout(onReady, 30));
     }
 
-    window.addEventListener('resize', debouncedUpdate);
-    window.addEventListener('orientationchange', debouncedUpdate);
-    document.addEventListener('DOMContentLoaded', () => setTimeout(updateMarquee, 30));
+    // Reapply on resize/orientationchange
+    let t;
+    function debouncedApply() {
+        clearTimeout(t);
+        t = setTimeout(() => {
+            ensureTwoBlocks();
+            applyTargetDuration();
+        }, 120);
+    }
+
+    window.addEventListener('resize', debouncedApply);
+    window.addEventListener('orientationchange', debouncedApply);
+    document.addEventListener('DOMContentLoaded', () => setTimeout(onReady, 30));
 })();

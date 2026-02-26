@@ -13,12 +13,11 @@
     --glow-text: 0 0 10px rgba(217,0,255,0.5);
     --transition: all 0.3s cubic-bezier(0.25,0.46,0.45,0.94);
 
-    /* Tune this to change perceived speed across devices (px per second).
-       Larger => faster. Example: 900 is a good starting point. */
-    --marquee-px-per-sec: 900;
+    /* Set the desired visible loop time here (seconds).
+       Example: 2s = each full block scrolls in 2 seconds. */
+    --marquee-target-duration: 2s;
 
-    /* runtime-set by JS */
-    --marquee-distance: 1000px;
+    /* runtime-managed fallback */
     --marquee-duration: 5s;
 }
 
@@ -90,6 +89,7 @@ nav { display:flex; justify-content:space-between; align-items:center; height:80
 .rabbit-icon { width:180px; height:auto !important; display:block; margin:0 auto 20px; filter:drop-shadow(0 0 15px var(--color-magenta)); animation:float 4s ease-in-out infinite; }
 
 /* --- MARQUEE --- */
+/* Keep layout such that there are two identical blocks and we translate -50% */
 .marquee-container {
     width:100%; overflow:hidden; background:var(--color-magenta); padding:10px 0;
     transform: rotate(-2deg) scale(1.05); border:2px solid var(--color-white); display:block;
@@ -97,7 +97,6 @@ nav { display:flex; justify-content:space-between; align-items:center; height:80
 
 .marquee-content {
     display:flex; gap:50px; white-space:nowrap; width:max-content; will-change:transform;
-    /* duration will be set by JS based on px/sec and real block width */
     animation: marquee var(--marquee-duration) linear infinite;
 }
 
@@ -106,6 +105,9 @@ nav { display:flex; justify-content:space-between; align-items:center; height:80
     font-family:var(--font-head); font-weight:900; font-size:1.5rem; color:var(--color-black);
     text-transform:uppercase; white-space:nowrap; flex-shrink:0; padding-right:24px;
 }
+
+/* uses -50% because we keep exactly two identical blocks */
+@keyframes marquee { 0%{ transform: translateX(0); } 100%{ transform: translateX(-50%); } }
 
 /* --- LINEUP --- */
 .section-title { font-family:var(--font-head); font-size:3rem; text-transform:uppercase; margin-bottom:60px; position:relative; display:inline-block; }
@@ -158,9 +160,6 @@ footer { background:var(--color-black); border-top:1px solid rgba(255,255,255,0.
 
 /* --- ANIMATIONS --- */
 @keyframes float { 0%{transform:translateY(0px);} 50%{transform:translateY(-15px);} 100%{transform:translateY(0px);} }
-
-/* marquee: translate by exact pixel distance (set by JS) */
-@keyframes marquee { 0%{ transform:translateX(0); } 100%{ transform:translateX(calc(-1 * var(--marquee-distance))); } }
 
 @keyframes textFlicker {
     0%{opacity:1; text-shadow:0 0 10px rgba(217,0,255,0.5);} 5%{opacity:0.8; text-shadow:0 0 0 rgba(217,0,255,0);} 10%{opacity:1; text-shadow:0 0 10px rgba(217,0,255,0.5);} 100%{opacity:1; text-shadow:0 0 20px rgba(217,0,255,0.5);}
