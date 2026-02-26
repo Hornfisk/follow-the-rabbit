@@ -13,7 +13,7 @@
   --transition: all 0.3s cubic-bezier(0.25,0.46,0.45,0.94);
 
   /* Adjust this to control marquee speed: higher = faster */
-  --marquee-px-per-sec: 1800;
+  --marquee-px-per-sec: 200;
 
   /* runtime updated */
   --marquee-distance: 1000px;
