@@ -1,5 +1,5 @@
 /* --- CSS VARIABLES & RESET --- */
-:root{
+:root {
     --color-magenta: #D900FF;
     --color-white: #FFFFFF;
     --color-black: #000000;
@@ -13,12 +13,56 @@
     --glow-text: 0 0 10px rgba(217,0,255,0.5);
     --transition: all 0.3s cubic-bezier(0.25,0.46,0.45,0.94);
 
-    /* Set the desired visible loop time here (seconds).
-       Example: 2s = each full block scrolls in 2 seconds. */
-    --marquee-target-duration: 3s;
+    /* Target visible speed in pixels per second */
+    --marquee-px-per-sec: 900;
 
-    /* runtime-managed fallback */
-    --marquee-duration: 3s;
+    /* runtime updated */
+    --marquee-distance: 1000px;
+    --marquee-duration: 5s;
+}
+
+.marquee-container {
+    width: 100%;
+    overflow: hidden;
+    background: var(--color-magenta);
+    padding: 10px 0;
+    transform: rotate(-2deg) scale(1.05);
+    border: 2px solid var(--color-white);
+    display: block;
+}
+
+.marquee-content {
+    display: flex;
+    gap: 50px;
+    white-space: nowrap;
+    width: max-content;
+    will-change: transform;
+    animation: marquee var(--marquee-duration) linear infinite;
+}
+
+.marquee-block {
+    display: flex;
+    flex-shrink: 0;
+}
+
+.marquee-item {
+    font-family: var(--font-head);
+    font-weight: 900;
+    font-size: 1.5rem;
+    color: var(--color-black);
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding-right: 24px;
+}
+
+@keyframes marquee {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(calc(-1 * var(--marquee-distance)));
+    }
 }
 
 * { margin:0; padding:0; box-sizing:border-box; }
