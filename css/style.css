@@ -258,7 +258,7 @@ nav {
   color: var(--color-black);
   text-transform: uppercase;
   white-space: nowrap;
-  padding-right: 60px;
+  padding-right: 0; /* CHANGED FROM 60px TO 0 */
 }
 
 @keyframes scroll-left {
