@@ -1,31 +1,48 @@
-// Mobile Menu
-const menuBtn = document.getElementById('menuBtn');
-const navLinks = document.getElementById('navLinks');
-if (menuBtn) {
-    menuBtn.onclick = () => navLinks.classList.toggle('active');
-}
+(function() {
+  const marqueeContent = document.querySelector('.marquee-content');
+  if (!marqueeContent) return;
 
-// Modal
-const modal = document.getElementById('ticketModal');
-function openModal() { modal.classList.add('active'); }
-function closeModal() { modal.classList.remove('active'); }
+  function debounce(fn, wait = 120) {
+    let timeout;
+    return function(...args) {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => fn.apply(this, args), wait);
+    };
+  }
 
-// Gallery
-const galleryGrid = document.getElementById('galleryGrid');
-const images = ['IMG_6073.webp','IMG_6074.webp','IMG_6082.webp','IMG_6086.webp','IMG_6089.webp','IMG_6091.webp','IMG_6092.webp','IMG_6093.webp','IMG_6094.webp','IMG_6095.webp','IMG_6096.webp','IMG_6097.webp','IMG_6105.webp','IMG_6108.webp','IMG_6111.webp'];
+  function updateMarquee() {
+    const totalWidth = marqueeContent.scrollWidth;
+    if (!totalWidth) return;
 
-if (galleryGrid) {
-    images.sort(() => Math.random() - 0.5).slice(0, 6).forEach(imgName => {
-        const item = document.createElement('div');
-        item.className = 'gallery-item';
-        item.innerHTML = `<img src="images/${imgName}" alt="Rave">`;
-        galleryGrid.appendChild(item);
-    });
-}
+    // We expect exactly two identical blocks
+    const blockWidth = totalWidth / 2;
 
-// Marquee Duplicator (Ensures seamless loop regardless of text length)
-const marqueeContent = document.querySelector('.marquee-content');
-if (marqueeContent) {
-    const content = marqueeContent.innerHTML;
-    marqueeContent.innerHTML = content + content + content + content;
-}
+    const style = getComputedStyle(document.documentElement);
+    const pxPerSecRaw = style.getPropertyValue('--marquee-px-per-sec') || '900';
+    const pxPerSec = parseFloat(pxPerSecRaw) || 900;
+
+    // Calculate duration in seconds, minimum 0.5s to avoid too fast
+    const durationSec = Math.max(0.5, blockWidth / pxPerSec);
+
+    document.documentElement.style.setProperty('--marquee-distance', `${blockWidth}px`);
+    document.documentElement.style.setProperty('--marquee-duration', `${durationSec}s`);
+
+    // Restart animation to apply new duration immediately
+    marqueeContent.style.animation = 'none';
+    // Force reflow
+    void marqueeContent.offsetWidth;
+    marqueeContent.style.animation = '';
+  }
+
+  const debouncedUpdate = debounce(updateMarquee, 120);
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => setTimeout(updateMarquee, 30)).catch(() => setTimeout(updateMarquee, 30));
+  } else {
+    window.addEventListener('load', () => setTimeout(updateMarquee, 30));
+  }
+
+  window.addEventListener('resize', debouncedUpdate);
+  window.addEventListener('orientationchange', debouncedUpdate);
+  document.addEventListener('DOMContentLoaded', () => setTimeout(updateMarquee, 30));
+})();
