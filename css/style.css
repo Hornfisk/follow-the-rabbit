@@ -12,12 +12,8 @@
   --glow-text: 0 0 10px rgba(217,0,255,0.5);
   --transition: all 0.3s cubic-bezier(0.25,0.46,0.45,0.94);
 
-  /* Adjust this to control marquee speed: higher = faster */
-  --marquee-px-per-sec: 200;
-
-  /* runtime updated */
-  --marquee-distance: 1000px;
-  --marquee-duration: 5s;
+  /* Adjust marquee speed here: lower is faster, higher is slower */
+  --marquee-speed: 20s;
 }
 
 * {
@@ -237,48 +233,40 @@ nav {
   animation: float 4s ease-in-out infinite;
 }
 
-/* --- MARQUEE --- */
+/* --- BULLETPROOF MARQUEE --- */
 .marquee-container {
   width: 100%;
   overflow: hidden;
   background: var(--color-magenta);
-  padding: 10px 0;
+  padding: 15px 0;
   transform: rotate(-2deg) scale(1.05);
-  border: 2px solid var(--color-white);
+  border-top: 2px solid var(--color-white);
+  border-bottom: 2px solid var(--color-white);
   display: block;
 }
 
 .marquee-content {
   display: flex;
-  gap: 50px;
-  white-space: nowrap;
   width: max-content;
-  will-change: transform;
-  animation: marquee var(--marquee-duration) linear infinite;
-}
-
-.marquee-block {
-  display: flex;
-  flex-shrink: 0;
+  animation: scroll-left var(--marquee-speed) linear infinite;
 }
 
 .marquee-item {
   font-family: var(--font-head);
   font-weight: 900;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   color: var(--color-black);
   text-transform: uppercase;
   white-space: nowrap;
-  flex-shrink: 0;
-  padding-right: 24px;
+  padding-right: 60px;
 }
 
-@keyframes marquee {
+@keyframes scroll-left {
   0% {
     transform: translateX(0);
   }
   100% {
-    transform: translateX(calc(-1 * var(--marquee-distance)));
+    transform: translateX(-50%);
   }
 }
 
