@@ -248,7 +248,7 @@ nav {
 .marquee-content {
   display: flex;
   width: max-content;
-  animation: scroll-left var(--marquee-speed) linear infinite;
+  animation: scroll-left var(--marquee-speed) linear infinite !important;
 }
 
 .marquee-item {
