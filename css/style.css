@@ -15,10 +15,10 @@
 
     /* Set the desired visible loop time here (seconds).
        Example: 2s = each full block scrolls in 2 seconds. */
-    --marquee-target-duration: 2s;
+    --marquee-target-duration: 3s;
 
     /* runtime-managed fallback */
-    --marquee-duration: 5s;
+    --marquee-duration: 3s;
 }
 
 * { margin:0; padding:0; box-sizing:border-box; }
