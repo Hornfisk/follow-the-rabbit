@@ -14,7 +14,7 @@
     --transition: all 0.3s cubic-bezier(0.25,0.46,0.45,0.94);
 
     /* Adjust this to change visible speed across devices. Higher = faster. */
-    --marquee-px-per-sec: 5000;
+    --marquee-px-per-sec: 50000;
 
     /* runtime-managed by JS */
     --marquee-distance: 1000px;
