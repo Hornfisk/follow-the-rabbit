@@ -589,4 +589,16 @@ footer {
     grid-template-columns: 1fr;
     grid-auto-rows: 200px;
   }
+
+}
+/* --- SOCIAL ICONS --- */
+.social-link img {
+  width: 20px;
+  height: auto;
+  display: block;
+  transition: var(--transition);
+}
+
+.social-link:hover img {
+  filter: invert(17%) sepia(100%) saturate(4193%) hue-rotate(286deg) brightness(102%) contrast(101%);
 }
