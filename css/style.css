@@ -206,7 +206,7 @@ nav {
   justify-content: center;
   text-align: center;
   position: relative;
-  padding-top: 120px;
+  padding-top: 200px;
   padding-bottom: 80px;
 }
 
@@ -232,13 +232,13 @@ nav {
 }
 
 .rabbit-icon {
+  position: absolute;
+  top: 20px;
+  left: calc(50% - 90px);
   width: 180px;
   height: auto !important;
-  display: block;
-  margin: 0 auto 20px;
   filter: drop-shadow(0 0 15px var(--color-magenta));
   animation: float 4s ease-in-out infinite;
-  position: relative;
   z-index: 1001;
 }
 
@@ -456,8 +456,8 @@ nav {
   }
 
   .gallery-grid {
-    overflow-x: unset;
-    scroll-snap-type: unset;
+    overflow: visible;
+    scroll-snap-type: none;
     width: max-content;
     gap: 15px;
     animation: scroll-left var(--gallery-speed) linear infinite;
