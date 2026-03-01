@@ -238,6 +238,8 @@ nav {
   margin: 0 auto 20px;
   filter: drop-shadow(0 0 15px var(--color-magenta));
   animation: float 4s ease-in-out infinite;
+  position: relative;
+  z-index: 1001;
 }
 
 /* --- BULLETPROOF MARQUEE --- */
