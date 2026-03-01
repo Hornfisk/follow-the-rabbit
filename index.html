@@ -11,7 +11,7 @@
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Space+Grotesk:wght@400;700;900&display=swap" rel="stylesheet" />
 
-		<!-- Custom CSS (v2.1 to bypass cache) -->
+		<!-- Custom CSS -->
 		<link rel="stylesheet" href="css/style.css?v=2.2" />
 	</head>
 	<body>
@@ -30,7 +30,7 @@
 						<a href="#gallery">Gallery</a>
 						<a href="#tickets" class="text-magenta">Get Tickets</a>
 					</div>
-					<button class="mobile-menu-btn" id="menuBtn">☰</button>
+					<button class="mobile-menu-btn" id="menuBtn" aria-expanded="false" aria-controls="navLinks" aria-label="Toggle navigation">☰</button>
 				</nav>
 			</div>
 		</header>
@@ -38,7 +38,7 @@
 		<!-- Hero Section -->
 		<section class="hero">
 			<div class="container hero-content">
-				<img src="images/follow-the-rabbit.webp" alt="Follow the Rabbit Logo" class="rabbit-icon" />
+				<img src="images/follow-the-rabbit.webp" alt="Follow the Rabbit Logo" class="rabbit-icon" fetchpriority="high" />
 				<h1>Into The <span class="text-magenta">Rave</span></h1>
 				<p>FOLLOW THE RABBIT // HOUSE • TECHNO • TRANCE</p>
 				<a href="#tickets" class="btn btn-primary">Enter the Void</a>
@@ -59,7 +59,7 @@
 			<div class="container">
 				<div class="text-center">
 					<h2 class="section-title">The <span class="text-magenta">Hive</span> Mind</h2>
-					<p style="margin-bottom: 40px; color: #ccc;">Selected Sonic Agents</p>
+					<p class="section-subtitle">Selected Sonic Agents</p>
 				</div>
 				<div class="lineup-grid">
 					<div class="artist-card">
@@ -89,11 +89,11 @@
 		</section>
 
 		<!-- Info & Tickets -->
-		<section id="info" class="section-padding" style="background: var(--color-dark-gray);">
+		<section id="info" class="section-padding bg-dark">
 			<div class="container">
 				<div class="info-layout">
 					<div class="info-box">
-						<h2 style="font-family: var(--font-head); margin-bottom: 30px; text-transform: uppercase;">Mission <span class="text-magenta">Briefing</span></h2>
+						<h2 class="info-section-title">Mission <span class="text-magenta">Briefing</span></h2>
 						<div class="info-item">
 							<span class="info-label">Date</span>
 							<span class="info-value">April 10, 2026</span>
@@ -105,7 +105,7 @@
 						<div class="info-item">
 							<span class="info-label">Location</span>
 							<span class="info-value">
-								<a href="https://www.instagram.com/mangos_nightclub/" target="_blank" class="location-link">
+								<a href="https://www.instagram.com/mangos_nightclub/" target="_blank" rel="noopener noreferrer" class="location-link">
 									Mango's Nightclub<br/>Benalmádena
 								</a>
 							</span>
@@ -115,30 +115,30 @@
 							<span class="info-value">18+ ID Required</span>
 						</div>
 					</div>
-					<div id="tickets" class="info-box" style="border-left: none; border-right: 4px solid var(--color-magenta);">
-						<h2 style="font-family: var(--font-head); margin-bottom: 30px; text-transform: uppercase;">Access <span class="text-magenta">Passes</span></h2>
+					<div id="tickets" class="info-box info-box--alt">
+						<h2 class="info-section-title">Access <span class="text-magenta">Passes</span></h2>
 						<div class="ticket-tier">
 							<div>
-								<div style="font-weight: 700;">Early Rabbit</div>
-								<small style="color: #888;">Limited Availability</small>
+								<div class="ticket-name">Early Rabbit</div>
+								<small class="text-muted">Limited Availability</small>
 							</div>
 							<div class="price">TBA</div>
 						</div>
 						<div class="ticket-tier">
 							<div>
-								<div style="font-weight: 700;">General Admission</div>
-								<small style="color: #888;">Standard Entry</small>
+								<div class="ticket-name">General Admission</div>
+								<small class="text-muted">Standard Entry</small>
 							</div>
 							<div class="price">TBA</div>
 						</div>
 						<div class="ticket-tier">
 							<div>
-								<div style="font-weight: 700;">VIP Burrow</div>
-								<small style="color: #888;">Fast Track + Lounge</small>
+								<div class="ticket-name">VIP Burrow</div>
+								<small class="text-muted">Fast Track + Lounge</small>
 							</div>
 							<div class="price">TBA</div>
 						</div>
-						<a href="https://followtherabbit.eventbrite.es" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="width: 100%; margin-top: 20px;">Buy Tickets</a>
+						<a href="https://followtherabbit.eventbrite.es" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn--full">Buy Tickets</a>
 					</div>
 				</div>
 			</div>
@@ -148,7 +148,9 @@
 		<section id="gallery" class="section-padding">
 			<div class="container">
 				<h2 class="section-title text-center">Visual <span class="text-magenta">Echoes</span></h2>
-				<div class="gallery-grid" id="galleryGrid"></div>
+				<div class="gallery-viewport">
+					<div class="gallery-grid" id="galleryGrid"></div>
+				</div>
 			</div>
 		</section>
 		<!-- Footer -->
@@ -163,35 +165,22 @@
 					<span>Project Insana</span>
 				</div>
 				<div class="socials">
-					<a href="https://www.instagram.com/projectinsana" class="social-link" aria-label="Instagram" target="_blank">
+					<a href="https://www.instagram.com/projectinsana" class="social-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
 						<img src="images/instagram-white-icon.svg" alt="Instagram">
 					</a>
-					<a href="https://www.facebook.com/events/s/follow-the-rabbit/740952528841627/#" class="social-link" aria-label="Facebook" target="_blank">
+					<a href="https://www.facebook.com/events/s/follow-the-rabbit/740952528841627/#" class="social-link" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
 						<img src="images/facebook-app-round-white-icon.svg" alt="Facebook">
 					</a>
-					<!-- TikTok Placeholder Link -->
-					<a href="#" class="social-link" aria-label="TikTok" target="_blank">
+					<!-- TikTok: commented out until account is created. SVG kept in images/ for future use.
+					<a href="#" class="social-link" aria-label="TikTok" target="_blank" rel="noopener noreferrer">
 						<img src="images/tiktok-simplified-white-icon.svg" alt="TikTok">
 					</a>
+					-->
 				</div>
-				<!-- This line was missing -->
 				<div class="copyright">&copy; 2026 Follow the Rabbit Event. All rights reserved.</div>
 			</div>
 		</footer>
-		<!-- Modal (Optional: Kept for reference, though not used by the new Eventbrite button) -->
-		<div class="modal-overlay" id="ticketModal">
-			<div class="modal">
-				<h3 style="font-family: var(--font-head); font-size: 1.5rem; margin-bottom: 15px;">Redirecting to Portal...</h3>
-				<p style="margin-bottom: 30px; color: #ccc;">You are being transferred to our secure ticket partner to complete your transaction.</p>
-				<div style="display: flex; gap: 10px; justify-content: center;">
-					<button onclick="closeModal()" class="btn">Close</button>
-					<button onclick="closeModal()" class="btn btn-primary">Proceed</button>
-				</div>
-			</div>
-		</div>
-
 		<!-- Custom JS -->
-		<!-- THIS IS THE IMPORTANT PART: It loads your gallery images -->
 		<script src="js/main.js?v=2.2"></script>
 	</body>
 </html>

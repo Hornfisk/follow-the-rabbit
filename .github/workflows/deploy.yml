@@ -20,5 +20,5 @@ jobs:
           REMOTE_USER: ${{ secrets.HOSTINGER_USER }}
           TARGET: /home/u358740591/public_html/
           SOURCE: ./
-          EXCLUDE: "/node_modules /.git /.github"
+          EXCLUDE: "/node_modules,/.git,/.github"
           ARGS: "-avzr --delete"

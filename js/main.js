@@ -3,15 +3,19 @@ const menuBtn = document.getElementById('menuBtn');
 const navLinks = document.getElementById('navLinks');
 if (menuBtn && navLinks) {
     menuBtn.onclick = () => {
-        navLinks.classList.toggle('active');
-        menuBtn.textContent = navLinks.classList.contains('active') ? '✕' : '☰';
+        const isOpen = navLinks.classList.toggle('active');
+        menuBtn.textContent = isOpen ? '✕' : '☰';
+        menuBtn.setAttribute('aria-expanded', isOpen);
     };
-}
 
-// Modal Logic
-const modal = document.getElementById('ticketModal');
-function openModal() { if(modal) modal.classList.add('active'); }
-function closeModal() { if(modal) modal.classList.remove('active'); }
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+            navLinks.classList.remove('active');
+            menuBtn.textContent = '☰';
+            menuBtn.setAttribute('aria-expanded', 'false');
+        }
+    });
+}
 
 // Gallery Generation (Visual Echoes)
 const galleryGrid = document.getElementById('galleryGrid');
@@ -21,20 +25,39 @@ const imageFiles = [
     'IMG_6096.webp','IMG_6097.webp','IMG_6105.webp','IMG_6108.webp','IMG_6111.webp'
 ];
 
+function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+function makeGalleryItem(filename, alt) {
+    const div = document.createElement('div');
+    div.classList.add('gallery-item');
+    const img = document.createElement('img');
+    img.src = `images/${filename}`;
+    img.alt = alt;
+    img.loading = 'lazy';
+    div.appendChild(img);
+    return div;
+}
+
 if (galleryGrid) {
-    // Shuffle and pick 6 images
-    const shuffled = imageFiles.sort(() => 0.5 - Math.random());
-    const selected = shuffled.slice(0, 6);
-    
-    selected.forEach(filename => {
-        const div = document.createElement('div');
-        div.classList.add('gallery-item');
-        const img = document.createElement('img');
-        img.src = `images/${filename}`;
-        img.alt = 'Visual Echo';
-        img.loading = 'lazy';
-        div.appendChild(img);
-        galleryGrid.appendChild(div);
+    const shuffled = shuffle(imageFiles);
+
+    // Render original items
+    shuffled.forEach((filename, i) => {
+        galleryGrid.appendChild(makeGalleryItem(filename, `Event photo ${i + 1}`));
+    });
+
+    // Duplicate for seamless carousel loop (desktop only — hidden on mobile via CSS)
+    shuffled.forEach(filename => {
+        const item = makeGalleryItem(filename, '');
+        item.setAttribute('aria-hidden', 'true');
+        galleryGrid.appendChild(item);
     });
 }
 
@@ -43,7 +66,6 @@ window.addEventListener('DOMContentLoaded', () => {
     const marqueeContent = document.querySelector('.marquee-content');
     if (marqueeContent) {
         const originalHTML = marqueeContent.innerHTML;
-        // Duplicate content to ensure it fills the screen width
         marqueeContent.innerHTML = originalHTML + originalHTML;
     }
 });
