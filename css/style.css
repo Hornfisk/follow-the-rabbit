@@ -573,8 +573,10 @@ footer {
   }
 }
 
-/* --- RESPONSIVE --- */
+/* --- RESPONSIVE (mobile ≤ 768px) --- */
 @media (max-width: 768px) {
+
+  /* --- Nav --- */
   .nav-links {
     position: fixed;
     top: 80px;
@@ -596,22 +598,94 @@ footer {
     display: block;
   }
 
-  .info-layout {
-    grid-template-columns: 1fr;
+  /* --- Hero --- */
+  .hero {
+    min-height: 100vh;                /* fallback */
+    min-height: 100svh;               /* modern mobile: excludes browser chrome */
+    align-items: flex-start;          /* content sits right below rabbit — no centering gap */
+    padding-top: 290px;               /* rabbit(90) + img(180) + 20px breathing room */
+    padding-bottom: 60px;
   }
 
   .rabbit-icon {
-    top: 120px; /* comfortably below 80px header; animation peak (~105px) stays clear of nav */
-  }
-
-  .hero {
-    padding-top: 340px; /* rabbit top (120) + rabbit height (180) + spacing = h1 below rabbit */
+    top: 90px;                        /* 10px below 80px header */
   }
 
   .hero h1 {
-    font-size: 2.5rem; /* 3rem wraps "INTO THE RAVE" on narrow screens; 2.5rem fits one line */
+    font-size: 2.5rem;
   }
 
+  .hero p {
+    margin-bottom: 24px;
+  }
+
+  /* --- Marquee --- */
+  .marquee-container {
+    padding: 10px 0;
+  }
+
+  .marquee-item {
+    font-size: 1.2rem;
+  }
+
+  /* --- Sections --- */
+  .section-padding {
+    padding: 60px 0;
+  }
+
+  .section-title {
+    font-size: 2rem;
+    margin-bottom: 30px;
+  }
+
+  .section-subtitle {
+    margin-bottom: 20px;
+  }
+
+  /* --- Lineup --- */
+  .lineup-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .artist-img {
+    height: 220px;
+  }
+
+  /* --- Info / Tickets --- */
+  .info-layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .info-box {
+    padding: 24px;
+  }
+
+  .info-section-title {
+    margin-bottom: 20px;
+  }
+
+  .info-item {
+    margin-bottom: 20px;
+  }
+
+  .info-value {
+    font-size: 1.25rem;
+  }
+
+  /* --- Footer --- */
+  footer {
+    padding: 40px 0 16px;
+  }
+
+  .footer-content {
+    gap: 20px;
+  }
+
+  .copyright {
+    margin-top: 20px;
+  }
 }
 /* --- SOCIAL ICONS --- */
 .social-link img {
