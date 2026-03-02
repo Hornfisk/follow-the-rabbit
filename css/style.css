@@ -601,11 +601,11 @@ footer {
   }
 
   .rabbit-icon {
-    top: 85px; /* header is 80px; rabbit sits just below it, ears can slightly overlap on float-up */
+    top: 120px; /* comfortably below 80px header; animation peak (~105px) stays clear of nav */
   }
 
   .hero {
-    padding-top: 300px; /* rabbit top (85) + rabbit height (180) + buffer = clear of rabbit */
+    padding-top: 340px; /* rabbit top (120) + rabbit height (180) + spacing = h1 below rabbit */
   }
 
   .hero h1 {
