@@ -600,6 +600,10 @@ footer {
     grid-template-columns: 1fr;
   }
 
+  .rabbit-icon {
+    top: 50px;
+  }
+
 }
 /* --- SOCIAL ICONS --- */
 .social-link img {
