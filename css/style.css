@@ -12,9 +12,7 @@
   --glow-text: 0 0 10px rgba(217,0,255,0.5);
   --transition: all 0.3s cubic-bezier(0.25,0.46,0.45,0.94);
 
-  /* Adjust marquee speed here: lower value = faster, higher value = slower. e.g. 10s = fast, 30s = slow */
   --marquee-speed: 20s;
-  /* Adjust gallery carousel speed here: higher = slower scroll */
   --gallery-speed: 70s;
 }
 
@@ -199,19 +197,28 @@ nav {
   cursor: pointer;
 }
 
+/* 
+   Hero Layout Fix:
+   1. Use flex-direction: column.
+   2. justify-content: center (centers content vertically).
+   3. padding-top: 350px creates a "Dead Zone" at the top.
+      The browser will center the text in the REMAINING space,
+      ensuring it never overlaps the top 350px where the rabbit lives.
+*/
 .hero {
   min-height: 100vh;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: center; 
   text-align: center;
   position: relative;
-  padding-top: 200px;
   padding-bottom: 80px;
+  padding-top: 350px; /* Safe zone for rabbit */
 }
 
 .hero-content {
   z-index: 2;
+  position: relative; /* Ensure it sits above background */
 }
 
 .hero h1 {
@@ -231,15 +238,22 @@ nav {
   letter-spacing: 2px;
 }
 
+/* 
+   Rabbit Positioning Fix:
+   1. Absolute position at top.
+   2. Reduced width clamp (max 250px) to minimize "whitespace" feel.
+   3. Peeking logic remains.
+*/
 .rabbit-icon {
   position: absolute;
-  top: 20px;
-  left: calc(50% - 90px);
-  width: 180px;
-  height: auto !important;
+  top: 90px; 
+  left: 50%;
+  transform: translateX(-50%);
+  width: clamp(150px, 20vw, 250px); /* Tighter width */
+  height: auto;
   filter: drop-shadow(0 0 15px var(--color-magenta));
   animation: float 4s ease-in-out infinite;
-  z-index: 1001;
+  z-index: 1001; 
 }
 
 /* --- BULLETPROOF MARQUEE --- */
@@ -267,19 +281,16 @@ nav {
   color: var(--color-black);
   text-transform: uppercase;
   white-space: nowrap;
-  padding-right: 0; /* CHANGED FROM 60px TO 0 */
+  padding-right: 0; 
 }
 
 @keyframes scroll-left {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
-/* --- LINEUP --- */
+/* --- LINEUP CAROUSEL --- */
+
 .section-title {
   font-family: var(--font-head);
   font-size: 3rem;
@@ -301,10 +312,26 @@ nav {
   box-shadow: var(--glow-text);
 }
 
+.lineup-viewport {
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.lineup-viewport::-webkit-scrollbar {
+  display: none;
+}
+
 .lineup-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  display: flex;
+  flex-wrap: nowrap;
   gap: 30px;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 10px; 
+}
+
+.artist-card[aria-hidden="true"] {
+  display: none;
 }
 
 .artist-card {
@@ -313,6 +340,8 @@ nav {
   padding: 20px;
   position: relative;
   transition: var(--transition);
+  flex: 0 0 300px; 
+  scroll-snap-align: start;
 }
 
 .artist-card:hover {
@@ -409,7 +438,6 @@ nav {
 
 /* --- GALLERY --- */
 
-/* Mobile: horizontal swipe carousel */
 .gallery-grid {
   display: flex;
   flex-wrap: nowrap;
@@ -424,7 +452,6 @@ nav {
   display: none;
 }
 
-/* Duplicates not needed on mobile */
 .gallery-item[aria-hidden="true"] {
   display: none;
 }
@@ -468,7 +495,6 @@ nav {
     cursor: zoom-in;
   }
 
-  /* Show duplicates needed for seamless loop */
   .gallery-item[aria-hidden="true"] {
     display: block;
   }
@@ -477,6 +503,26 @@ nav {
     flex: 0 0 280px;
     height: 320px;
     scroll-snap-align: unset;
+  }
+
+  /* Lineup Desktop: Auto-scrolling carousel */
+  .lineup-viewport {
+    overflow: hidden;
+  }
+
+  .lineup-grid {
+    width: max-content;
+    scroll-snap-type: none;
+    animation: scroll-left var(--gallery-speed) linear infinite;
+  }
+
+  .lineup-grid:hover {
+    animation-play-state: paused;
+  }
+
+  .artist-card[aria-hidden="true"] {
+    display: flex;
+    flex-direction: column;
   }
 }
 
@@ -544,13 +590,13 @@ footer {
 /* --- ANIMATIONS --- */
 @keyframes float {
   0% {
-    transform: translateY(0px);
+    transform: translateX(-50%) translateY(0px);
   }
   50% {
-    transform: translateY(-15px);
+    transform: translateX(-50%) translateY(-20px);
   }
   100% {
-    transform: translateY(0px);
+    transform: translateX(-50%) translateY(0px);
   }
 }
 
@@ -599,9 +645,18 @@ footer {
   .info-layout {
     grid-template-columns: 1fr;
   }
+  
+  /* Reduce padding on mobile to not waste space */
+  .hero {
+    padding-top: 200px;
+  }
+  
+  .rabbit-icon {
+     width: 140px; /* Smaller on mobile */
+  }
 
 }
-/* --- SOCIAL ICONS --- */
+
 .social-link img {
   width: 20px;
   height: auto;

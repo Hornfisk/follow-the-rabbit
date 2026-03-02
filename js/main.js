@@ -53,7 +53,7 @@ if (galleryGrid) {
         galleryGrid.appendChild(makeGalleryItem(filename, `Event photo ${i + 1}`));
     });
 
-    // Duplicate for seamless carousel loop (desktop only — hidden on mobile via CSS)
+    // Duplicate for seamless carousel loop
     shuffled.forEach(filename => {
         const item = makeGalleryItem(filename, '');
         item.setAttribute('aria-hidden', 'true');
@@ -61,7 +61,46 @@ if (galleryGrid) {
     });
 }
 
-// Marquee Duplicator (Ensures seamless loop)
+// Lineup Carousel Logic
+const lineupGrid = document.getElementById('lineupGrid');
+if (lineupGrid) {
+    // 1. Get all current cards
+    const cards = Array.from(lineupGrid.children);
+    
+    // 2. Separate into Booked and TBA
+    const booked = [];
+    const tba = [];
+
+    cards.forEach(card => {
+        const name = card.querySelector('.artist-name');
+        // If name exists and is NOT "TBA", it's a confirmed artist
+        if (name && name.textContent.trim() !== 'TBA') {
+            booked.push(card);
+        } else {
+            tba.push(card);
+        }
+    });
+
+    // 3. Clear grid and re-append: Booked artists first, then TBAs
+    lineupGrid.innerHTML = '';
+    
+    // Append confirmed artists first (e.g., Arkitech)
+    booked.forEach(card => lineupGrid.appendChild(card));
+    
+    // Append TBA cards after
+    tba.forEach(card => lineupGrid.appendChild(card));
+
+    // 4. Duplicate for seamless loop (Desktop)
+    // We duplicate the sorted list so the order is preserved in the loop
+    const allSortedCards = Array.from(lineupGrid.children);
+    allSortedCards.forEach(card => {
+        const clone = card.cloneNode(true);
+        clone.setAttribute('aria-hidden', 'true');
+        lineupGrid.appendChild(clone);
+    });
+}
+
+// Marquee Duplicator
 window.addEventListener('DOMContentLoaded', () => {
     const marqueeContent = document.querySelector('.marquee-content');
     if (marqueeContent) {
