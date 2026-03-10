@@ -331,7 +331,8 @@ nav {
 }
 
 .artist-card[aria-hidden="true"] {
-  display: none;
+  display: flex;
+  flex-direction: column;
 }
 
 .artist-card {

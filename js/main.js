@@ -181,6 +181,7 @@ if (lineupGrid) {
     });
 
     initLineupDrag(lineupGrid);
+    initMobileLoop(lineupGrid);
 }
 
 function initLineupDrag(lineupGrid) {
@@ -343,6 +344,29 @@ function initLineupDrag(lineupGrid) {
         measureHalfWidth();
         if (mq.matches) startLoop();
     });
+}
+
+function initMobileLoop(lineupGrid) {
+    const mq = window.matchMedia('(min-width: 768px)');
+    if (mq.matches) return; // desktop handled by initLineupDrag
+
+    const lineupViewport = lineupGrid.parentElement;
+    let half = 0;
+
+    function measure() {
+        half = lineupGrid.scrollWidth / 2;
+    }
+
+    requestAnimationFrame(measure);
+
+    lineupViewport.addEventListener('scroll', () => {
+        if (!half) return;
+        if (lineupViewport.scrollLeft >= half) {
+            lineupViewport.scrollLeft -= half;
+        }
+    }, { passive: true });
+
+    window.addEventListener('resize', measure, { passive: true });
 }
 
 // Marquee Duplicator
