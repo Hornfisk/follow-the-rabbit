@@ -505,19 +505,20 @@ nav {
     scroll-snap-align: unset;
   }
 
-  /* Lineup Desktop: Auto-scrolling carousel */
+  /* Lineup Desktop: JS rAF drag carousel */
   .lineup-viewport {
     overflow: hidden;
+    cursor: grab;
+  }
+
+  .lineup-viewport.is-dragging {
+    cursor: grabbing;
   }
 
   .lineup-grid {
     width: max-content;
     scroll-snap-type: none;
-    animation: scroll-left var(--gallery-speed) linear infinite;
-  }
-
-  .lineup-grid:hover {
-    animation-play-state: paused;
+    will-change: transform;
   }
 
   .artist-card[aria-hidden="true"] {

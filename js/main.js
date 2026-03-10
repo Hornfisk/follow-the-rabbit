@@ -98,6 +98,139 @@ if (lineupGrid) {
         clone.setAttribute('aria-hidden', 'true');
         lineupGrid.appendChild(clone);
     });
+
+    initLineupDrag(lineupGrid);
+}
+
+function initLineupDrag(lineupGrid) {
+    const mq = window.matchMedia('(min-width: 768px)');
+    if (!mq.matches) return;
+
+    const lineupViewport = lineupGrid.parentElement;
+
+    const rawSpeed = getComputedStyle(document.documentElement)
+        .getPropertyValue('--gallery-speed').trim();
+    const gallerySpeedSeconds = parseFloat(rawSpeed); // 70
+
+    let offset = 0;
+    let halfWidth = 0;
+    let autoScrollSpeed = 0;
+    let rafId = null;
+    let autoScrollActive = true;
+
+    let isDragging = false;
+    let startX = 0;
+    let lastX = 0;
+    let totalDelta = 0;
+    let hasDragged = false;
+
+    let isCoasting = false;
+    let velocity = 0;
+    const FRICTION = 0.92;
+    const VELOCITY_THRESHOLD = 0.5;
+    const DRAG_THRESHOLD = 5;
+    const SMOOTHING = 0.8;
+    const RESUME_DELAY = 2000;
+    let resumeTimer = null;
+
+    // Defer measurement one frame so cloned cards are rendered
+    requestAnimationFrame(() => {
+        halfWidth = lineupGrid.scrollWidth / 2;
+        autoScrollSpeed = halfWidth / (gallerySpeedSeconds * 60);
+        startLoop();
+    });
+
+    function wrapOffset() {
+        if (halfWidth <= 0) return;
+        if (offset >= halfWidth) offset -= halfWidth;
+        if (offset < 0) offset += halfWidth;
+    }
+
+    function tick() {
+        if (!isDragging) {
+            if (isCoasting) {
+                offset -= velocity;
+                velocity *= FRICTION;
+                if (Math.abs(velocity) < VELOCITY_THRESHOLD) {
+                    isCoasting = false;
+                    velocity = 0;
+                }
+            } else if (autoScrollActive) {
+                offset += autoScrollSpeed;
+            }
+        }
+        wrapOffset();
+        lineupGrid.style.transform = `translateX(${-offset}px)`;
+        rafId = requestAnimationFrame(tick);
+    }
+
+    function startLoop() {
+        if (rafId) return;
+        rafId = requestAnimationFrame(tick);
+    }
+
+    function onPointerDown(e) {
+        if (e.button !== 0 && e.pointerType === 'mouse') return;
+        isDragging = true;
+        isCoasting = false;
+        velocity = 0;
+        autoScrollActive = false;
+        hasDragged = false;
+        totalDelta = 0;
+        startX = e.clientX;
+        lastX = e.clientX;
+        lineupViewport.setPointerCapture(e.pointerId);
+        lineupViewport.classList.add('is-dragging');
+        clearTimeout(resumeTimer);
+    }
+
+    function onPointerMove(e) {
+        if (!isDragging) return;
+        const delta = e.clientX - lastX;
+        offset -= delta;
+        velocity = delta * SMOOTHING;
+        lastX = e.clientX;
+        totalDelta += Math.abs(e.clientX - startX);
+        if (totalDelta > DRAG_THRESHOLD) hasDragged = true;
+        wrapOffset();
+        lineupGrid.style.transform = `translateX(${-offset}px)`;
+    }
+
+    function onPointerUp(e) {
+        if (!isDragging) return;
+        isDragging = false;
+        lineupViewport.classList.remove('is-dragging');
+        if (Math.abs(velocity) > VELOCITY_THRESHOLD) isCoasting = true;
+        resumeTimer = setTimeout(() => {
+            autoScrollActive = true;
+            isCoasting = false;
+        }, RESUME_DELAY);
+    }
+
+    // Capture phase — fires before <a> links inside cards respond
+    function onCapturingClick(e) {
+        if (hasDragged) {
+            e.preventDefault();
+            e.stopPropagation();
+            hasDragged = false;
+        }
+    }
+
+    lineupViewport.addEventListener('pointerdown', onPointerDown);
+    lineupViewport.addEventListener('pointermove', onPointerMove);
+    lineupViewport.addEventListener('pointerup', onPointerUp);
+    lineupViewport.addEventListener('pointercancel', onPointerUp);
+    lineupViewport.addEventListener('click', onCapturingClick, true);
+
+    // Recalculate on resize (e.g. orientation change on large tablets)
+    const resizeObserver = new ResizeObserver(() => {
+        const newHalf = lineupGrid.scrollWidth / 2;
+        if (newHalf > 0) {
+            halfWidth = newHalf;
+            autoScrollSpeed = halfWidth / (gallerySpeedSeconds * 60);
+        }
+    });
+    resizeObserver.observe(lineupViewport);
 }
 
 // Marquee Duplicator
