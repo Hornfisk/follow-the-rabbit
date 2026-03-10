@@ -12,7 +12,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Space+Grotesk:wght@400;700;900&display=swap" rel="stylesheet" />
 
         <!-- Custom CSS -->
-        <link rel="stylesheet" href="css/style.css?v=2.5" />
+        <link rel="stylesheet" href="css/style.css?v=2.6" />
     </head>
     <body>
         <!-- Background Elements -->
@@ -187,7 +187,17 @@
                 <div class="copyright">&copy; 2026 Follow the Rabbit Event. All rights reserved.</div>
             </div>
         </footer>
+        <!-- Lightbox -->
+        <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer" hidden>
+            <div class="lightbox-backdrop"></div>
+            <button class="lightbox-close" aria-label="Close">&times;</button>
+            <button class="lightbox-prev" aria-label="Previous photo">&#8249;</button>
+            <button class="lightbox-next" aria-label="Next photo">&#8250;</button>
+            <div class="lightbox-img-wrap">
+                <img class="lightbox-img" src="" alt="" />
+            </div>
+        </div>
         <!-- Custom JS -->
-        <script src="js/main.js?v=2.5"></script>
+        <script src="js/main.js?v=2.6"></script>
     </body>
 </html>
