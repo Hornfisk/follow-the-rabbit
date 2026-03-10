@@ -185,13 +185,11 @@ if (lineupGrid) {
 
 function initLineupDrag(lineupGrid) {
     const mq = window.matchMedia('(min-width: 768px)');
-    if (!mq.matches) return;
-
     const lineupViewport = lineupGrid.parentElement;
 
     const rawSpeed = getComputedStyle(document.documentElement)
         .getPropertyValue('--gallery-speed').trim();
-    const gallerySpeedSeconds = parseFloat(rawSpeed); // 70
+    const gallerySpeedSeconds = parseFloat(rawSpeed);
 
     let offset = 0;
     let halfWidth = 0;
@@ -202,24 +200,24 @@ function initLineupDrag(lineupGrid) {
     let isDragging = false;
     let startX = 0;
     let lastX = 0;
-    let totalDelta = 0;
     let hasDragged = false;
 
     let isCoasting = false;
     let velocity = 0;
     const FRICTION = 0.92;
     const VELOCITY_THRESHOLD = 0.5;
-    const DRAG_THRESHOLD = 5;
+    const DRAG_THRESHOLD = 8;
     const SMOOTHING = 0.8;
     const RESUME_DELAY = 2000;
     let resumeTimer = null;
 
-    // Defer measurement one frame so cloned cards are rendered
-    requestAnimationFrame(() => {
-        halfWidth = lineupGrid.scrollWidth / 2;
-        autoScrollSpeed = halfWidth / (gallerySpeedSeconds * 60);
-        startLoop();
-    });
+    function measureHalfWidth() {
+        const measured = lineupGrid.scrollWidth / 2;
+        if (measured > 0) {
+            halfWidth = measured;
+            autoScrollSpeed = halfWidth / (gallerySpeedSeconds * 60);
+        }
+    }
 
     function wrapOffset() {
         if (halfWidth <= 0) return;
@@ -228,6 +226,7 @@ function initLineupDrag(lineupGrid) {
     }
 
     function tick() {
+        if (halfWidth === 0) measureHalfWidth(); // lazy fallback if init measurement was too early
         if (!isDragging) {
             if (isCoasting) {
                 offset -= velocity;
@@ -250,19 +249,30 @@ function initLineupDrag(lineupGrid) {
         rafId = requestAnimationFrame(tick);
     }
 
+    function stopLoop() {
+        if (rafId) {
+            cancelAnimationFrame(rafId);
+            rafId = null;
+        }
+    }
+
     function onPointerDown(e) {
+        if (!mq.matches) return;
         if (e.button !== 0 && e.pointerType === 'mouse') return;
         isDragging = true;
         isCoasting = false;
         velocity = 0;
         autoScrollActive = false;
         hasDragged = false;
-        totalDelta = 0;
         startX = e.clientX;
         lastX = e.clientX;
-        lineupViewport.setPointerCapture(e.pointerId);
         lineupViewport.classList.add('is-dragging');
         clearTimeout(resumeTimer);
+        // Document-level listeners track pointer anywhere on the page.
+        // No setPointerCapture — avoids stuck state when links open new tabs.
+        document.addEventListener('pointermove', onPointerMove);
+        document.addEventListener('pointerup', onPointerRelease);
+        document.addEventListener('pointercancel', onPointerRelease);
     }
 
     function onPointerMove(e) {
@@ -271,13 +281,15 @@ function initLineupDrag(lineupGrid) {
         offset -= delta;
         velocity = delta * SMOOTHING;
         lastX = e.clientX;
-        totalDelta += Math.abs(e.clientX - startX);
-        if (totalDelta > DRAG_THRESHOLD) hasDragged = true;
+        if (Math.abs(e.clientX - startX) > DRAG_THRESHOLD) hasDragged = true;
         wrapOffset();
         lineupGrid.style.transform = `translateX(${-offset}px)`;
     }
 
-    function onPointerUp(e) {
+    function onPointerRelease() {
+        document.removeEventListener('pointermove', onPointerMove);
+        document.removeEventListener('pointerup', onPointerRelease);
+        document.removeEventListener('pointercancel', onPointerRelease);
         if (!isDragging) return;
         isDragging = false;
         lineupViewport.classList.remove('is-dragging');
@@ -288,7 +300,7 @@ function initLineupDrag(lineupGrid) {
         }, RESUME_DELAY);
     }
 
-    // Capture phase — fires before <a> links inside cards respond
+    // Capture phase — blocks <a> link click after a real drag
     function onCapturingClick(e) {
         if (hasDragged) {
             e.preventDefault();
@@ -297,21 +309,40 @@ function initLineupDrag(lineupGrid) {
         }
     }
 
-    lineupViewport.addEventListener('pointerdown', onPointerDown);
-    lineupViewport.addEventListener('pointermove', onPointerMove);
-    lineupViewport.addEventListener('pointerup', onPointerUp);
-    lineupViewport.addEventListener('pointercancel', onPointerUp);
-    lineupViewport.addEventListener('click', onCapturingClick, true);
-
-    // Recalculate on resize (e.g. orientation change on large tablets)
-    const resizeObserver = new ResizeObserver(() => {
-        const newHalf = lineupGrid.scrollWidth / 2;
-        if (newHalf > 0) {
-            halfWidth = newHalf;
-            autoScrollSpeed = halfWidth / (gallerySpeedSeconds * 60);
+    // Handle viewport crossing the 768px breakpoint after initial load
+    function handleMqChange(e) {
+        if (e.matches) {
+            measureHalfWidth();
+            autoScrollActive = true;
+            startLoop();
+        } else {
+            stopLoop();
+            autoScrollActive = false;
+            isDragging = false;
+            isCoasting = false;
+            lineupViewport.classList.remove('is-dragging');
+            lineupGrid.style.transform = '';
+            clearTimeout(resumeTimer);
+            document.removeEventListener('pointermove', onPointerMove);
+            document.removeEventListener('pointerup', onPointerRelease);
+            document.removeEventListener('pointercancel', onPointerRelease);
         }
+    }
+
+    lineupViewport.addEventListener('pointerdown', onPointerDown);
+    lineupViewport.addEventListener('click', onCapturingClick, true);
+    mq.addEventListener('change', handleMqChange);
+
+    const resizeObserver = new ResizeObserver(() => {
+        if (mq.matches) measureHalfWidth();
     });
     resizeObserver.observe(lineupViewport);
+
+    // Initial start — defer one frame for DOM layout
+    requestAnimationFrame(() => {
+        measureHalfWidth();
+        if (mq.matches) startLoop();
+    });
 }
 
 // Marquee Duplicator
@@ -322,3 +353,17 @@ window.addEventListener('DOMContentLoaded', () => {
         marqueeContent.innerHTML = originalHTML + originalHTML;
     }
 });
+
+// CRT glitch trigger
+(function () {
+    const crt = document.getElementById('crt');
+    if (!crt) return;
+
+    function triggerGlitch() {
+        crt.classList.add('glitch');
+        crt.addEventListener('animationend', () => crt.classList.remove('glitch'), { once: true });
+        setTimeout(triggerGlitch, 10000 + Math.random() * 12000);
+    }
+
+    setTimeout(triggerGlitch, 3000 + Math.random() * 7000);
+})();
