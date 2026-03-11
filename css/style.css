@@ -373,10 +373,22 @@ nav {
 }
 
 .artist-genre {
-  color: var(--color-magenta);
-  font-size: 0.9rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 8px;
+}
+
+.genre-tag {
+  font-size: 0.65rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
+  color: var(--color-magenta);
+  border: 1px solid rgba(217, 0, 255, 0.45);
+  padding: 3px 8px;
+  border-radius: 2px;
+  background: rgba(217, 0, 255, 0.07);
 }
 
 /* --- INFO / TICKETS --- */
