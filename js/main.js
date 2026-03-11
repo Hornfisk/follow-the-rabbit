@@ -378,14 +378,19 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// CRT glitch trigger
+// Glitch trigger on logo and rabbit icon
 (function () {
-    const crt = document.getElementById('crt');
-    if (!crt) return;
+    const targets = [
+        ...document.querySelectorAll('.logo'),
+        document.querySelector('.rabbit-icon')
+    ].filter(Boolean);
+    if (!targets.length) return;
 
     function triggerGlitch() {
-        crt.classList.add('glitch');
-        crt.addEventListener('animationend', () => crt.classList.remove('glitch'), { once: true });
+        targets.forEach(el => {
+            el.classList.add('glitch');
+            el.addEventListener('animationend', () => el.classList.remove('glitch'), { once: true });
+        });
         setTimeout(triggerGlitch, 10000 + Math.random() * 12000);
     }
 

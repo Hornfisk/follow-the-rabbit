@@ -629,21 +629,12 @@ nav {
 .lightbox-prev:hover,
 .lightbox-next:hover { opacity: 1; }
 
-/* --- CRT OVERLAY --- */
+/* --- NOISE OVERLAY --- */
 #crt {
   position: fixed;
   inset: 0;
   z-index: 500;
   pointer-events: none;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 0, 0, 0.03) 2px,
-    rgba(0, 0, 0, 0.03) 4px
-  );
-  animation: flicker 9s linear infinite;
-  will-change: opacity;
 }
 
 #crt::before {
@@ -657,8 +648,14 @@ nav {
   will-change: background-position;
 }
 
-#crt.glitch {
+/* Glitch on logo text */
+.logo.glitch {
   animation: glitch-anim 0.25s linear;
+}
+
+/* Glitch on rabbit icon — bakes in the centering translateX so float resumes cleanly */
+.rabbit-icon.glitch {
+  animation: glitch-anim-rabbit 0.25s linear !important;
 }
 
 @keyframes grain {
@@ -674,14 +671,6 @@ nav {
   90%  { background-position: 50%  20%; }
 }
 
-@keyframes flicker {
-  0%, 95%, 100% { opacity: 1; }
-  96%           { opacity: 0.94; }
-  97%           { opacity: 1; }
-  98%           { opacity: 0.96; }
-  99%           { opacity: 1; }
-}
-
 @keyframes glitch-anim {
   0%   { transform: none;                          filter: none; }
   15%  { transform: translateX(3px) skewX(0.8deg); filter: hue-rotate(8deg); }
@@ -692,6 +681,16 @@ nav {
   100% { transform: none;                          filter: none; }
 }
 
+@keyframes glitch-anim-rabbit {
+  0%   { transform: translateX(-50%);                                filter: drop-shadow(0 0 15px var(--color-magenta)); }
+  15%  { transform: translateX(calc(-50% + 4px)) skewX(0.8deg);     filter: hue-rotate(8deg) drop-shadow(0 0 15px var(--color-magenta)); }
+  30%  { transform: translateX(calc(-50% - 3px));                    filter: hue-rotate(-8deg) brightness(1.1) drop-shadow(0 0 15px var(--color-magenta)); }
+  50%  { transform: translateX(calc(-50% + 5px)) skewX(-0.8deg);    filter: hue-rotate(6deg) drop-shadow(0 0 20px var(--color-magenta)); }
+  65%  { transform: translateX(calc(-50% - 4px));                    filter: none; }
+  80%  { transform: translateX(calc(-50% + 2px));                    filter: hue-rotate(3deg) drop-shadow(0 0 15px var(--color-magenta)); }
+  100% { transform: translateX(-50%);                                filter: drop-shadow(0 0 15px var(--color-magenta)); }
+}
+
 @media (max-width: 768px) {
   #crt::before {
     animation-play-state: paused;
@@ -700,8 +699,9 @@ nav {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #crt,
-  #crt::before {
+  #crt::before,
+  .logo.glitch,
+  .rabbit-icon.glitch {
     animation-play-state: paused;
   }
 }
